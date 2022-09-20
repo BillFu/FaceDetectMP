@@ -14,6 +14,9 @@
 #include "tensorflow/lite/model.h"
 #include "tensorflow/lite/optional_debug_tools.h"
 
+#include "BlazeFaceUtil.h"
+
+
 using namespace std;
 using namespace tflite;
 
@@ -33,37 +36,28 @@ struct FaceInfo{
 class BlazeFaceDetector
 {
 private:
-    /*
-    char* mModelBuffer = nullptr;
-    long mModelSize;
-    bool mModelQuantized = false;
-    const int OUTPUT_WIDTH = 640;
-    const int OUTPUT_HEIGHT = 480;
-     */
-    
     unique_ptr<FlatBufferModel> mFrontModel;
     unique_ptr<Interpreter> mInterpreter;
-    /*
-    TfLiteTensor* mInputTensor = nullptr;
-    TfLiteTensor* mOutputHeatmap = nullptr;
-    TfLiteTensor* mOutputScale = nullptr;
-    TfLiteTensor* mOutputOffset = nullptr;
-
-    int d_h;
-    int d_w;
-    float d_scale_h;
-    float d_scale_w;
-    float scale_w ;
-    float scale_h ;
-    int image_h;
-    int image_w;
-    */
+    
+    vector<Anchor> mAnchors;
+    
+    int mNetInputHeight;
+    int mNetInputWidth;
+    int mNetChannels;
+    
+    float mScoreThreshold;
+    float mIouThreshold;
+    
+    float mSigmoidScoreThreshold;
 
 public:
+    static bool isFrontModelBufFilled;
     static char frontModelBuffer[FACE_DETECT_FRONT_MODEL_SIZE];
+    
+    // 这个函数在程序初始化时要调用一次，并确保返回true之后，才能往下进行
     static bool loadFrontModelFile(const string& modelFileName);
     
-    BlazeFaceDetector();  //char* buffer, long size, bool quantized=false);
+    BlazeFaceDetector(float scoreThreshold = 0.7, float iouThreshold = 0.3);
     ~BlazeFaceDetector();
     
     bool initFrontModel();

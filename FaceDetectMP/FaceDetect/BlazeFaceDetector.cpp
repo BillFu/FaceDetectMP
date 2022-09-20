@@ -3,10 +3,12 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <math.h>
 
 #include "BlazeFaceDetector.h"
 #include "BlazeFaceUtil.h"
 
+bool BlazeFaceDetector::isFrontModelBufFilled = false;
 char BlazeFaceDetector::frontModelBuffer[FACE_DETECT_FRONT_MODEL_SIZE];
 
 bool BlazeFaceDetector::loadFrontModelFile(const string& modelFileName)
@@ -22,41 +24,33 @@ bool BlazeFaceDetector::loadFrontModelFile(const string& modelFileName)
     else
     {
         cout << "Model file has been Successfully loaded!" << endl;
+        isFrontModelBufFilled = true;
         return true;
     }
 }
 
-BlazeFaceDetector::BlazeFaceDetector()  // char* buffer, long size, bool quantized)
+BlazeFaceDetector::BlazeFaceDetector(float scoreThreshold, float iouThreshold)
 {
-    /*
-    self.type = type
-            self.scoreThreshold = scoreThreshold
-            self.iouThreshold = iouThreshold
-            self.sigmoidScoreThreshold = np.log(self.scoreThreshold/(1-self.scoreThreshold))
-            self.fps = 0
-            self.timeLastPrediction = time.time()
-            self.frameCounter = 0
+    //self.type = type
+    mScoreThreshold = scoreThreshold;
+    mIouThreshold = iouThreshold;
+    mSigmoidScoreThreshold = log(mScoreThreshold/(1.0-mScoreThreshold));
 
-            # Initialize model based on model type
-            self.initializeModel(type)
+    // Initialize model based on model type
+    initFrontModel();
 
-            # Generate anchors for model
-            self.generateAnchors(type)
-    */
-    
-    
-    /*
-    mModelQuantized = quantized;
-    mModelSize = size;
-    mModelBuffer = (char*) malloc(sizeof(char) * mModelSize);
-    memcpy(mModelBuffer, buffer, sizeof(char) * mModelSize);
-    loadModel();
-	dynamic_scale(OUTPUT_WIDTH, OUTPUT_HEIGHT);
-     */
+    // # Generate anchors for model
+    genFrontModelAnchors();
 }
 
 bool BlazeFaceDetector::initFrontModel()
 {
+    if(!isFrontModelBufFilled)
+    {
+        cout << "To invoke BlazeFaceDetector::loadFrontModelFile() first!" << endl;
+        return false;
+    }
+        
     mFrontModel = FlatBufferModel::BuildFromBuffer(frontModelBuffer, FACE_DETECT_FRONT_MODEL_SIZE);
     assert(mFrontModel != nullptr);
     if(mFrontModel == nullptr)
@@ -81,13 +75,11 @@ bool BlazeFaceDetector::initFrontModel()
 
 void BlazeFaceDetector::getModelInputDetails()
 {
-    /*
-    self.input_details = self.interpreter.get_input_details()
-    input_shape = self.input_details[0]['shape']
-    self.inputHeight = input_shape[1]
-    self.inputWidth = input_shape[2]
-    self.channels = input_shape[3]
-     */
+    // Get Input Tensor Dimensions
+    int inTensorIndex = mInterpreter->inputs()[0];
+    mNetInputHeight = mInterpreter->tensor(inTensorIndex)->dims->data[1];
+    mNetInputWidth = mInterpreter->tensor(inTensorIndex)->dims->data[2];
+    mNetChannels = mInterpreter->tensor(inTensorIndex)->dims->data[3];
 }
 
 void BlazeFaceDetector::getModelOutputDetails()
@@ -108,31 +100,10 @@ void BlazeFaceDetector::genFrontModelAnchors()
                                 strides, aspect_ratios,
                                 0.5, 0.5,
                                 false, 1.0, true);
-    //self.anchors = gen_anchors(options);
+    genAnchors(options, mAnchors);
 }
 
 /*
-void FaceDetector::loadModel()
-{
-    mModel = tflite::FlatBufferModel::BuildFromBuffer(mModelBuffer, sizeof(char) * mModelSize);
-    assert(mModel != nullptr);
-
-    // Build the interpreter with the InterpreterBuilder.
-    tflite::ops::builtin::BuiltinOpResolver resolver;
-    tflite::InterpreterBuilder builder(*mModel, resolver);
-    builder(&mInterpreter);
-    assert(mInterpreter != nullptr);
-
-    assert(mInterpreter->AllocateTensors() == kTfLiteOk);
-
-    assert(mInterpreter->inputs().size() == 1);
-
-    mInputTensor = mInterpreter->tensor(mInterpreter->inputs()[0]);
-
-    mOutputHeatmap = mInterpreter->tensor(mInterpreter->outputs()[3]);
-    mOutputScale = mInterpreter->tensor(mInterpreter->outputs()[2]);
-    mOutputOffset = mInterpreter->tensor(mInterpreter->outputs()[1]);
-}
 
 void FaceDetector::detect(cv::Mat img, std::vector<FaceInfo>& faces,
 		float heatmapThreshold, float nmsThreshold){
