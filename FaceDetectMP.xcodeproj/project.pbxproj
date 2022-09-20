@@ -1,0 +1,349 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CBA886E928D93D76004A42BA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CBA886E828D93D76004A42BA /* main.cpp */; };
+		CBA886F328D94267004A42BA /* BlazeFaceDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CBA886F228D94267004A42BA /* BlazeFaceDetector.cpp */; };
+		CBA886F628D96233004A42BA /* libtensorflowlite.so in Frameworks */ = {isa = PBXBuildFile; fileRef = CBA886F528D96233004A42BA /* libtensorflowlite.so */; };
+		CBA886F928D96966004A42BA /* BlazeFaceUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CBA886F828D96966004A42BA /* BlazeFaceUtil.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		CBA886E328D93D76004A42BA /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		CBA886E528D93D76004A42BA /* FaceDetectMP */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FaceDetectMP; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBA886E828D93D76004A42BA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		CBA886F128D94267004A42BA /* BlazeFaceDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlazeFaceDetector.h; sourceTree = "<group>"; };
+		CBA886F228D94267004A42BA /* BlazeFaceDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BlazeFaceDetector.cpp; sourceTree = "<group>"; };
+		CBA886F528D96233004A42BA /* libtensorflowlite.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtensorflowlite.so; path = FaceDetectMP/intel_lib/libtensorflowlite.so; sourceTree = "<group>"; };
+		CBA886F728D96966004A42BA /* BlazeFaceUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlazeFaceUtil.h; sourceTree = "<group>"; };
+		CBA886F828D96966004A42BA /* BlazeFaceUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BlazeFaceUtil.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CBA886E228D93D76004A42BA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CBA886F628D96233004A42BA /* libtensorflowlite.so in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CBA886DC28D93D76004A42BA = {
+			isa = PBXGroup;
+			children = (
+				CBA886E728D93D76004A42BA /* FaceDetectMP */,
+				CBA886E628D93D76004A42BA /* Products */,
+				CBA886F428D96233004A42BA /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		CBA886E628D93D76004A42BA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CBA886E528D93D76004A42BA /* FaceDetectMP */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CBA886E728D93D76004A42BA /* FaceDetectMP */ = {
+			isa = PBXGroup;
+			children = (
+				CBA886F028D94168004A42BA /* FaceDetect */,
+				CBA886E828D93D76004A42BA /* main.cpp */,
+			);
+			path = FaceDetectMP;
+			sourceTree = "<group>";
+		};
+		CBA886F028D94168004A42BA /* FaceDetect */ = {
+			isa = PBXGroup;
+			children = (
+				CBA886F828D96966004A42BA /* BlazeFaceUtil.cpp */,
+				CBA886F728D96966004A42BA /* BlazeFaceUtil.h */,
+				CBA886F228D94267004A42BA /* BlazeFaceDetector.cpp */,
+				CBA886F128D94267004A42BA /* BlazeFaceDetector.h */,
+			);
+			path = FaceDetect;
+			sourceTree = "<group>";
+		};
+		CBA886F428D96233004A42BA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CBA886F528D96233004A42BA /* libtensorflowlite.so */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CBA886E428D93D76004A42BA /* FaceDetectMP */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CBA886EC28D93D76004A42BA /* Build configuration list for PBXNativeTarget "FaceDetectMP" */;
+			buildPhases = (
+				CBA886E128D93D76004A42BA /* Sources */,
+				CBA886E228D93D76004A42BA /* Frameworks */,
+				CBA886E328D93D76004A42BA /* CopyFiles */,
+				CBA886EF28D93E21004A42BA /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FaceDetectMP;
+			productName = FaceDetectMP;
+			productReference = CBA886E528D93D76004A42BA /* FaceDetectMP */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CBA886DD28D93D76004A42BA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1400;
+				TargetAttributes = {
+					CBA886E428D93D76004A42BA = {
+						CreatedOnToolsVersion = 14.0;
+					};
+				};
+			};
+			buildConfigurationList = CBA886E028D93D76004A42BA /* Build configuration list for PBXProject "FaceDetectMP" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CBA886DC28D93D76004A42BA;
+			productRefGroup = CBA886E628D93D76004A42BA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CBA886E428D93D76004A42BA /* FaceDetectMP */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		CBA886EF28D93E21004A42BA /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncp ${TARGET_BUILD_DIR}/${TARGET_NAME} ${PROJECT_DIR}/bin/${TARGET_NAME}\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CBA886E128D93D76004A42BA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CBA886E928D93D76004A42BA /* main.cpp in Sources */,
+				CBA886F928D96966004A42BA /* BlazeFaceUtil.cpp in Sources */,
+				CBA886F328D94267004A42BA /* BlazeFaceDetector.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		CBA886EA28D93D76004A42BA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		CBA886EB28D93D76004A42BA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		CBA886ED28D93D76004A42BA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					/Users/meicet/nlohmann_json/include,
+					/usr/local/Cellar/opencv/4.6.0/include/opencv4,
+					"${PROJECT_DIR}/FaceDetectMP/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FaceDetectMP/intel_lib",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		CBA886EE28D93D76004A42BA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					/Users/meicet/nlohmann_json/include,
+					/usr/local/Cellar/opencv/4.6.0/include/opencv4,
+					"${PROJECT_DIR}/FaceDetectMP/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FaceDetectMP/intel_lib",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CBA886E028D93D76004A42BA /* Build configuration list for PBXProject "FaceDetectMP" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CBA886EA28D93D76004A42BA /* Debug */,
+				CBA886EB28D93D76004A42BA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CBA886EC28D93D76004A42BA /* Build configuration list for PBXNativeTarget "FaceDetectMP" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CBA886ED28D93D76004A42BA /* Debug */,
+				CBA886EE28D93D76004A42BA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CBA886DD28D93D76004A42BA /* Project object */;
+}
