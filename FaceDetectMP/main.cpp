@@ -13,12 +13,12 @@
 #include "nlohmann/json.hpp"
 
 #include <opencv2/opencv.hpp>
+#include "BlazeFaceDetector.h"
 
 using namespace std;
 using namespace cv;
 
 using json = nlohmann::json;
-
 
 int main(int argc, const char * argv[])
 {
@@ -36,11 +36,41 @@ int main(int argc, const char * argv[])
     string srcImgFile = config_json.at("SourceImage");
     string annoImgFile = config_json.at("AnnoImage");
     
-    
     cout << "faceDetectModelFile: " << faceDetectModelFile << endl;
     cout << "srcImgFile: " << srcImgFile << endl;
     cout << "annoImgFile: " << annoImgFile << endl;
     
+    // Load Input Image
+    Mat srcImage = cv::imread(srcImgFile.c_str());
+    if(srcImage.empty())
+    {
+        cout << "Failed to load input iamge: " << srcImgFile << endl;
+        return 0;
+    }
+    else
+        cout << "Succeeded to load image: " << srcImgFile << endl;
+    
+    bool isOK = BlazeFaceDetector::loadFrontModelFile(faceDetectModelFile);
+    if(!isOK)
+    {
+        cout << "Failed to load model file: " << faceDetectModelFile << endl;
+        return 0;
+    }
+    else
+        cout << "Succeeded to load model file: " << faceDetectModelFile << endl;
+
+    float scoreThreshold = 0.7; //;
+    float iouThreshold = 0.3;
+    BlazeFaceDetector detector(scoreThreshold, iouThreshold);
+
+    isOK = detector.DetectFaces(srcImage);
+    if(!isOK)
+    {
+        cout << "Failed to invoke BlazeFaceDetector::DetectFaces()."  << endl;
+        return 0;
+    }
+    else
+        cout << "Succeeded to invoke BlazeFaceDetector::DetectFaces()." << endl;
     
     return 0;
 }

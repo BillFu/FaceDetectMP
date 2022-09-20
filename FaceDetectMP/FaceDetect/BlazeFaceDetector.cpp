@@ -7,6 +7,7 @@
 
 #include "BlazeFaceDetector.h"
 #include "BlazeFaceUtil.h"
+#include "Utils.hpp"
 
 bool BlazeFaceDetector::isFrontModelBufFilled = false;
 char BlazeFaceDetector::frontModelBuffer[FACE_DETECT_FRONT_MODEL_SIZE];
@@ -29,12 +30,14 @@ bool BlazeFaceDetector::loadFrontModelFile(const string& modelFileName)
     }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+
 BlazeFaceDetector::BlazeFaceDetector(float scoreThreshold, float iouThreshold)
 {
     //self.type = type
     mScoreThreshold = scoreThreshold;
     mIouThreshold = iouThreshold;
-    mSigmoidScoreThreshold = log(mScoreThreshold/(1.0-mScoreThreshold));
+    mSigScoreTh = log(mScoreThreshold / (1.0 - mScoreThreshold));
 
     // Initialize model based on model type
     initFrontModel();
@@ -68,7 +71,6 @@ bool BlazeFaceDetector::initFrontModel()
 
     //# Get model info
     getModelInputDetails();
-    getModelOutputDetails();
         
     return true;
 }
@@ -80,11 +82,6 @@ void BlazeFaceDetector::getModelInputDetails()
     mNetInputHeight = mInterpreter->tensor(inTensorIndex)->dims->data[1];
     mNetInputWidth = mInterpreter->tensor(inTensorIndex)->dims->data[2];
     mNetChannels = mInterpreter->tensor(inTensorIndex)->dims->data[3];
-}
-
-void BlazeFaceDetector::getModelOutputDetails()
-{
-    //mOutputDetails = mInterpreter.get_output_details();
 }
 
 void BlazeFaceDetector::genFrontModelAnchors()
@@ -103,37 +100,72 @@ void BlazeFaceDetector::genFrontModelAnchors()
     genAnchors(options, mAnchors);
 }
 
-/*
-
-void FaceDetector::detect(cv::Mat img, std::vector<FaceInfo>& faces,
-		float heatmapThreshold, float nmsThreshold){
-	image_h = img.rows;
-	image_w = img.cols;
-	scale_w = (float)image_w / (float)d_w;
-	scale_h = (float)image_h / (float)d_h;
-
-    // Read image into `mInputTensor`
-	cv::Mat inputBlob = cv::dnn::blobFromImage(img, 1.0, cv::Size(d_w, d_h),
-											cv::Scalar(0, 0, 0),
-											true, CV_32F);
-
-	memcpy(tflite::GetTensorData<float>(mInputTensor), inputBlob.data,
-		   sizeof(float) * inputBlob.size[1] * inputBlob.size[2] * inputBlob.size[3]);
-	assert(mInputTensor->type == kTfLiteFloat32);
-
+bool BlazeFaceDetector::DetectFaces(const Mat& srcImage)
+{
+    int inTensorIndex = mInterpreter->inputs()[0];
+    
+    Mat resized_image;
+    // Not need to perform the convertion from BGR to RGB by the noticeable statements,
+    // later it would be done in one trick way.
+    resize(srcImage, resized_image, Size(mNetInputWidth, mNetInputHeight), INTER_NEAREST);
+    
+    float* inTensorBuf = mInterpreter->typed_input_tensor<float>(inTensorIndex);
+    uint8_t* inImgMem = resized_image.ptr<uint8_t>(0);
+    FeedInputWithQuantizedImage(inImgMem, inTensorBuf, mNetInputHeight, mNetInputWidth, mNetChannels);
+    cout << "FeedInputWithQuantizedImage() is executed successfully!" << endl;
+    
     // Inference
-	if (mInterpreter->Invoke() != kTfLiteOk){
-		return;
-	}
+    if (mInterpreter->Invoke() != kTfLiteOk)
+    {
+        cout << "!!! Failed to execute: mInterpreter->Invoke()." << endl;
+        return false;
+    }
 
-	postProcess(
-		tflite::GetTensorData<float>(mOutputHeatmap),
-		tflite::GetTensorData<float>(mOutputScale),
-		tflite::GetTensorData<float>(mOutputOffset),
-		faces, heatmapThreshold, nmsThreshold);
-	getBox(faces);
+    vector<int> goodIndices;
+    vector<float> goodScore;
+    // Filter scores based on the detection scores
+    filterDetections(goodIndices, goodScore);
+    for(int i=0; i<goodIndices.size(); i++ )
+    {
+        cout << goodIndices[i] << ", " << goodScore[i] << endl;
+    }
+
+     /*
+
+# Extract information of filtered detections
+boxes, keypoints = self.extractDetections(output0, goodDetectionsIndices)
+
+# Filter results with non-maximum suppression
+detectionResults = self.filterWithNonMaxSupression(boxes, keypoints, scores)
+
+# Update fps calculator
+self.updateFps()
+
+return detectionResults
+     */
+    return true;
 }
-*/
+
+void BlazeFaceDetector::filterDetections(vector<int>& goodIndices,
+                                         vector<float>& goodScore)
+{
+    int output_conf_ID = mInterpreter->outputs()[1];  // classification
+    //cout << "output confidence ID: " << output_conf_ID << endl;
+    float* confPtr = mInterpreter->typed_output_tensor<float>(1);
+    
+    cout << "mSigScoreTh: " << mSigScoreTh << endl;
+    for(int i=0; i<896; i++)
+    {
+        //cout << i << ", " << confPtr[i] << endl;
+        if(confPtr[i] > mSigScoreTh)
+        {
+            goodIndices.push_back(i);
+            float score = 1.0 /(1.0 + exp(-confPtr[i]));
+            goodScore.push_back(score);
+        }
+    }
+}
+
 /*
 void FaceDetector::postProcess(
         float* heatmap, float* scale, float* offset,

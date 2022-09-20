@@ -19,6 +19,7 @@
 
 using namespace std;
 using namespace tflite;
+using namespace cv;
 
 #define  FACE_DETECT_FRONT_MODEL_SIZE  229032
 
@@ -48,8 +49,12 @@ private:
     float mScoreThreshold;
     float mIouThreshold;
     
-    float mSigmoidScoreThreshold;
+    float mSigScoreTh;  // Sigmoid Score Threshold
 
+    int mImg_height;
+    int mImg_width;
+    int mImg_channels;
+    
 public:
     static bool isFrontModelBufFilled;
     static char frontModelBuffer[FACE_DETECT_FRONT_MODEL_SIZE];
@@ -62,25 +67,18 @@ public:
     
     bool initFrontModel();
 
-    //void detect(cv::Mat img, std::vector<FaceInfo>& faces,
-    //        float scoreThresh, float nmsThresh);
+    bool DetectFaces(const Mat& srcImage);
 
 private:
     void getModelInputDetails();
-    void getModelOutputDetails();
     
     void genFrontModelAnchors();
+    
+    //Mat preInputForInference(const Mat& srcImage);
+    
+    void filterDetections(vector<int>& goodIndices,
+                          vector<float>& goodScore);
 
-    /*
-    void dynamic_scale(float in_w, float in_h);
-    void postProcess(float* heatmap, float* scale, float* offset,
-                     std::vector<FaceInfo>& faces,
-                     float heatmapThreshold, float nmsThreshold);
-    void nms(std::vector<FaceInfo>& input, std::vector<FaceInfo>& output,
-            float nmsThreshold);
-    std::vector<int> filterHeatmap(float* heatmap, int h, int w, float thresh);
-    void getBox(std::vector<FaceInfo>& faces);
-     */
 };
 
 #endif // BLAZE_FACE_DETECTOR_H

@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		261DF7A228D9DAF4006ABD65 /* libtensorflowlite.so in Frameworks */ = {isa = PBXBuildFile; fileRef = 261DF7A128D9DAF4006ABD65 /* libtensorflowlite.so */; };
+		261DF7A528DA070A006ABD65 /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 261DF7A328DA070A006ABD65 /* Utils.cpp */; };
 		CBA886E928D93D76004A42BA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CBA886E828D93D76004A42BA /* main.cpp */; };
 		CBA886F328D94267004A42BA /* BlazeFaceDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CBA886F228D94267004A42BA /* BlazeFaceDetector.cpp */; };
-		CBA886F628D96233004A42BA /* libtensorflowlite.so in Frameworks */ = {isa = PBXBuildFile; fileRef = CBA886F528D96233004A42BA /* libtensorflowlite.so */; };
 		CBA886F928D96966004A42BA /* BlazeFaceUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CBA886F828D96966004A42BA /* BlazeFaceUtil.cpp */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +27,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		261DF7A128D9DAF4006ABD65 /* libtensorflowlite.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtensorflowlite.so; path = FaceDetectMP/m1_lib/libtensorflowlite.so; sourceTree = "<group>"; };
+		261DF7A328DA070A006ABD65 /* Utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
+		261DF7A428DA070A006ABD65 /* Utils.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Utils.hpp; sourceTree = "<group>"; };
 		CBA886E528D93D76004A42BA /* FaceDetectMP */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FaceDetectMP; sourceTree = BUILT_PRODUCTS_DIR; };
 		CBA886E828D93D76004A42BA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		CBA886F128D94267004A42BA /* BlazeFaceDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlazeFaceDetector.h; sourceTree = "<group>"; };
@@ -40,7 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CBA886F628D96233004A42BA /* libtensorflowlite.so in Frameworks */,
+				261DF7A228D9DAF4006ABD65 /* libtensorflowlite.so in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,6 +80,8 @@
 		CBA886F028D94168004A42BA /* FaceDetect */ = {
 			isa = PBXGroup;
 			children = (
+				261DF7A328DA070A006ABD65 /* Utils.cpp */,
+				261DF7A428DA070A006ABD65 /* Utils.hpp */,
 				CBA886F828D96966004A42BA /* BlazeFaceUtil.cpp */,
 				CBA886F728D96966004A42BA /* BlazeFaceUtil.h */,
 				CBA886F228D94267004A42BA /* BlazeFaceDetector.cpp */,
@@ -87,6 +93,7 @@
 		CBA886F428D96233004A42BA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				261DF7A128D9DAF4006ABD65 /* libtensorflowlite.so */,
 				CBA886F528D96233004A42BA /* libtensorflowlite.so */,
 			);
 			name = Frameworks;
@@ -173,6 +180,7 @@
 				CBA886E928D93D76004A42BA /* main.cpp in Sources */,
 				CBA886F928D96966004A42BA /* BlazeFaceUtil.cpp in Sources */,
 				CBA886F328D94267004A42BA /* BlazeFaceDetector.cpp in Sources */,
+				261DF7A528DA070A006ABD65 /* Utils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,13 +301,22 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				HEADER_SEARCH_PATHS = (
-					/Users/meicet/nlohmann_json/include,
-					/usr/local/Cellar/opencv/4.6.0/include/opencv4,
+					/Users/fuliye/nlohmann_json/include,
+					/opt/homebrew/Cellar/opencv/4.6.0/include/opencv4,
 					"${PROJECT_DIR}/FaceDetectMP/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FaceDetectMP/intel_lib",
+					"$(PROJECT_DIR)/FaceDetectMP/m1_lib",
+					/opt/homebrew/Cellar/opencv/4.6.0/lib,
+				);
+				OTHER_LDFLAGS = (
+					"-lopencv_core",
+					"-lopencv_imgcodecs",
+					"-lopencv_calib3d",
+					"-lopencv_highgui",
+					"-lopencv_imgproc",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -310,13 +327,22 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				HEADER_SEARCH_PATHS = (
-					/Users/meicet/nlohmann_json/include,
-					/usr/local/Cellar/opencv/4.6.0/include/opencv4,
+					/Users/fuliye/nlohmann_json/include,
+					/opt/homebrew/Cellar/opencv/4.6.0/include/opencv4,
 					"${PROJECT_DIR}/FaceDetectMP/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FaceDetectMP/intel_lib",
+					"$(PROJECT_DIR)/FaceDetectMP/m1_lib",
+					/opt/homebrew/Cellar/opencv/4.6.0/lib,
+				);
+				OTHER_LDFLAGS = (
+					"-lopencv_core",
+					"-lopencv_imgcodecs",
+					"-lopencv_calib3d",
+					"-lopencv_highgui",
+					"-lopencv_imgproc",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
