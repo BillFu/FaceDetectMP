@@ -1,6 +1,16 @@
 //
-// https://github.com/ibaiGorordo/BlazeFace-TFLite-Inference/blob/main/BlazeFaceDetection/blazeFaceDetector.py
 //
+/************************************************************************************************************
+本模块的功能是，利用tensorflow lite C++ API来驱动MediaPipe中内含的Blaze Face Detection Model.
+本模块由python代码改写而来，原始代码出处如下：
+https://github.com/ibaiGorordo/BlazeFace-TFLite-Inference/blob/main/BlazeFaceDetection/blazeFaceDetector.py
+
+本模块采用Front相机模型，效果可能比Back相机模型稍差。
+采用Back相机模型的推理引擎参加另外的模块。
+ 
+Author: Fu Xiaoqiang
+Date:   2022/9/21
+*************************************************************************************************************/
 
 #ifndef BLAZE_FACE_DETECTOR_H
 #define BLAZE_FACE_DETECTOR_H
@@ -22,16 +32,27 @@ using namespace tflite;
 using namespace cv;
 
 #define  FACE_DETECT_FRONT_MODEL_SIZE  229032
-
+#define  NUM_KP_IN_FACE    6    // the number of key points in one face
 
 enum { N_FACE_ATTB=5 }; // number of attributes of the following struct:
 
-struct FaceInfo{
-    float x1;
-    float y1;
-    float x2;
-    float y2;
+struct FaceInfo
+{
+    Rect_<float> box;
+    Point2f keyPts[NUM_KP_IN_FACE];
     float score;
+};
+
+struct FaceIndexScore
+{
+    int index;  // take a value in [0 896]
+    float score;
+    
+    FaceIndexScore(int index0, float score0)
+    {
+        index = index0;
+        score = score0;
+    }
 };
 
 class BlazeFaceDetector
@@ -42,12 +63,12 @@ private:
     
     vector<Anchor> mAnchors;
     
-    int mNetInputHeight;
-    int mNetInputWidth;
+    int mNetInputHeight;  //对应于python代码中的self.inputHeight
+    int mNetInputWidth;   //对应于python代码中的self.inputWidth
     int mNetChannels;
     
     float mScoreThreshold;
-    float mIouThreshold;
+    float mIouThreshold;  // ???
     
     float mSigScoreTh;  // Sigmoid Score Threshold
 
@@ -73,11 +94,11 @@ private:
     void getModelInputDetails();
     
     void genFrontModelAnchors();
+        
+    void filterDetections(vector<FaceIndexScore>& indexScoreCds); // Cd stands for candidate
     
-    //Mat preInputForInference(const Mat& srcImage);
-    
-    void filterDetections(vector<int>& goodIndices,
-                          vector<float>& goodScore);
+    void extractDetections(const vector<int>& goodIndices);
+
 
 };
 

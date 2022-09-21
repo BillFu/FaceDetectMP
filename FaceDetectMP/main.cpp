@@ -59,7 +59,7 @@ int main(int argc, const char * argv[])
     else
         cout << "Succeeded to load model file: " << faceDetectModelFile << endl;
 
-    float scoreThreshold = 0.7; //;
+    float scoreThreshold = 0.75; //;
     float iouThreshold = 0.3;
     BlazeFaceDetector detector(scoreThreshold, iouThreshold);
 

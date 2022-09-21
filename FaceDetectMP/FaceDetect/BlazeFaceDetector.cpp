@@ -121,14 +121,15 @@ bool BlazeFaceDetector::DetectFaces(const Mat& srcImage)
         return false;
     }
 
-    vector<int> goodIndices;
-    vector<float> goodScore;
+    vector<FaceIndexScore> indexScoreCds;
     // Filter scores based on the detection scores
-    filterDetections(goodIndices, goodScore);
-    for(int i=0; i<goodIndices.size(); i++ )
+    filterDetections(indexScoreCds);
+    cout << "-----------------------------------------------" << endl;
+    for(int i=0; i<indexScoreCds.size(); i++ )
     {
-        cout << goodIndices[i] << ", " << goodScore[i] << endl;
+        cout << indexScoreCds[i].index << ", " << indexScoreCds[i].score << endl;
     }
+    cout << "-----------------------------------------------" << endl;
 
      /*
 
@@ -146,10 +147,10 @@ return detectionResults
     return true;
 }
 
-void BlazeFaceDetector::filterDetections(vector<int>& goodIndices,
-                                         vector<float>& goodScore)
+// Cds for Candidates
+void BlazeFaceDetector::filterDetections(vector<FaceIndexScore>& indexScoreCds)
 {
-    int output_conf_ID = mInterpreter->outputs()[1];  // classification
+    //int outConfID = mInterpreter->outputs()[1];  // confidence
     //cout << "output confidence ID: " << output_conf_ID << endl;
     float* confPtr = mInterpreter->typed_output_tensor<float>(1);
     
@@ -159,13 +160,54 @@ void BlazeFaceDetector::filterDetections(vector<int>& goodIndices,
         //cout << i << ", " << confPtr[i] << endl;
         if(confPtr[i] > mSigScoreTh)
         {
-            goodIndices.push_back(i);
             float score = 1.0 /(1.0 + exp(-confPtr[i]));
-            goodScore.push_back(score);
+            FaceIndexScore indexScore(i, score);
+            indexScoreCds.push_back(indexScore);
         }
     }
 }
 
+void BlazeFaceDetector::extractDetections(const vector<int>& goodIndices)
+{
+    // bounding box and six key points
+    float* out0Ptr = mInterpreter->typed_output_tensor<float>(0);
+    //float boxKeyPt[][16]
+
+    for(int anchorID: goodIndices)
+    {
+        const Anchor& anchor = mAnchors[anchorID];
+
+        float* pBoxKeyPts = out0Ptr + anchorID * 16;
+        float sx = pBoxKeyPts[0];  // scaled x in [0.0 1.0]
+        float sy = pBoxKeyPts[1];  // scaled y in [0.0 1.0]
+        float w = pBoxKeyPts[2];
+        float h = pBoxKeyPts[3];
+        
+        float cx = sx + anchor.x_center * mNetInputWidth;
+        float cy = sy + anchor.y_center * mNetInputHeight;
+
+        cx /= mNetInputWidth;
+        cy /= mNetInputHeight;
+        w /= mNetInputWidth;
+        h /= mNetInputHeight;
+        
+        float* pKeyPts = pBoxKeyPts + 4;
+        for(int ptIndex = 0; ptIndex < NUM_KP_IN_FACE; ptIndex++)
+        {
+            float* pCurKeyPt = pKeyPts + 2*ptIndex;
+            float lx = pCurKeyPt[0];
+            float ly = pCurKeyPt[1];
+            
+            lx += anchor.x_center * mNetInputWidth;
+            ly += anchor.y_center * mNetInputHeight;
+            
+            lx /= mNetInputWidth;
+            ly /= mNetInputHeight;
+            
+            // store lx, ly in some container.
+        }
+    }
+}
 /*
 void FaceDetector::postProcess(
         float* heatmap, float* scale, float* offset,
