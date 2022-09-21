@@ -135,9 +135,9 @@ bool BlazeFaceDetector::DetectFaces(const Mat& srcImage)
     }
     cout << "-----------------------------------------------" << endl;
 
-    vector<FaceInfo> faceInfoCds;
+    vector<FaceInfo> faceInfoCds, outFaceInfoSet;
     extractDetections(indexScoreCds, faceInfoCds);
-    filterWithNMS(faceInfoCds);
+    NMS(faceInfoCds, outFaceInfoSet);
     
     return true;
 }
@@ -194,7 +194,7 @@ void BlazeFaceDetector::extractDetections(
         Point2f pt1(cx - w * 0.5, cy - h * 0.5);
         Point2f pt2(cx + w * 0.5, cy + h * 0.5);
 
-        faceInfo.box = Rect_<float>(pt1, pt2);
+        faceInfo.setBox(pt1, pt2);
         
         float* pKeyPts = pBoxKeyPts + 4;
         for(int ptIndex = 0; ptIndex < NUM_KP_IN_FACE; ptIndex++)
@@ -218,14 +218,14 @@ void BlazeFaceDetector::extractDetections(
 
 // https://github.com/cuongvng/Face-Detection-TFLite-JNI-Android/blob/master/app/src/main/cpp/face-detection.cpp
 
-void BlazeFaceDetector::NMS(const vector<FaceInfo>& inFaceSet,
+void BlazeFaceDetector::NMS(vector<FaceInfo>& inFaceSet,
                             vector<FaceInfo>& outFaceSet)
 {
     // sort the elements in inFaceSet by score in Descending order
     std::sort(inFaceSet.begin(), inFaceSet.end(),
         [](const FaceInfo& a, const FaceInfo& b){return a.score > b.score;});
 
-    int box_num = inFaceSet.size();
+    int box_num = (int)(inFaceSet.size());
 
     std::vector<int> merged(box_num, 0);
     for (int i = 0; i < box_num; i++)
@@ -233,10 +233,10 @@ void BlazeFaceDetector::NMS(const vector<FaceInfo>& inFaceSet,
         if (merged[i])
             continue;
 
-        output.push_back(inFaceSet[i]);
+        outFaceSet.push_back(inFaceSet[i]);
 
-        float h0 = input[i].y2 - input[i].y1 + 1;
-        float w0 = input[i].x2 - input[i].x1 + 1;
+        float h0 = inFaceSet[i].y2 - inFaceSet[i].y1 + 1;
+        float w0 = inFaceSet[i].x2 - inFaceSet[i].x1 + 1;
 
         float area0 = h0 * w0;
 
@@ -245,11 +245,11 @@ void BlazeFaceDetector::NMS(const vector<FaceInfo>& inFaceSet,
             if (merged[j])
                 continue;
 
-            float inner_x0 = input[i].x1 > input[j].x1 ? input[i].x1 : input[j].x1;
-            float inner_y0 = input[i].y1 > input[j].y1 ? input[i].y1 : input[j].y1;
+            float inner_x0 = inFaceSet[i].x1 > inFaceSet[j].x1 ? inFaceSet[i].x1 : inFaceSet[j].x1;
+            float inner_y0 = inFaceSet[i].y1 > inFaceSet[j].y1 ? inFaceSet[i].y1 : inFaceSet[j].y1;
 
-            float inner_x1 = input[i].x2 < input[j].x2 ? input[i].x2 : input[j].x2;
-            float inner_y1 = input[i].y2 < input[j].y2 ? input[i].y2 : input[j].y2;
+            float inner_x1 = inFaceSet[i].x2 < inFaceSet[j].x2 ? inFaceSet[i].x2 : inFaceSet[j].x2;
+            float inner_y1 = inFaceSet[i].y2 < inFaceSet[j].y2 ? inFaceSet[i].y2 : inFaceSet[j].y2;
 
             float inner_h = inner_y1 - inner_y0 + 1;
             float inner_w = inner_x1 - inner_x0 + 1;
@@ -259,12 +259,12 @@ void BlazeFaceDetector::NMS(const vector<FaceInfo>& inFaceSet,
 
             float inner_area = inner_h * inner_w;
 
-            float h1 = input[j].y2 - input[j].y1 + 1;
-            float w1 = input[j].x2 - input[j].x1 + 1;
+            float h1 = inFaceSet[j].y2 - inFaceSet[j].y1 + 1;
+            float w1 = inFaceSet[j].x2 - inFaceSet[j].x1 + 1;
             float area1 = h1 * w1;
 
             float iou = inner_area / (area0 + area1 - inner_area);
-            if (iou > nmsThreshold)
+            if (iou > mIouThreshold)
                 merged[j] = 1;
         }
 

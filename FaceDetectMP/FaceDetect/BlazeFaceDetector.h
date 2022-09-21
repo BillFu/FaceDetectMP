@@ -38,9 +38,24 @@ enum { N_FACE_ATTB=5 }; // number of attributes of the following struct:
 
 struct FaceInfo
 {
+    // x1, y1, x2, y2与后面的box存在信息冗余，但为NMS算法的便利，故意这么做。
+    float x1;
+    float y1;
+    float x2;
+    float y2;
+    
     Rect_<float> box;
     Point2f keyPts[NUM_KP_IN_FACE];
     float score;
+    
+    void setBox(const Point2f& pt1, const Point2f& pt2)
+    {
+        box = Rect_<float>(pt1, pt2);
+        x1 = pt1.x;
+        y1 = pt1.y;
+        x2 = pt2.x;
+        y2 = pt2.y;
+    }
 };
 
 struct FaceIndexScore
@@ -101,7 +116,7 @@ private:
                            vector<FaceInfo>& faceInfoCds);
     
     ////NMS is the abbreviation for NonMaxSupression
-    void NMS(const vector<FaceInfo>& inFaceSet,
+    void NMS(vector<FaceInfo>& inFaceSet,
             vector<FaceInfo>& outFaceSet);
 };
 
