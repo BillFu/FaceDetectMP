@@ -13,7 +13,8 @@
 #include "nlohmann/json.hpp"
 
 #include <opencv2/opencv.hpp>
-#include "BlazeFaceDetector.h"
+#include "FaceDetect/BlazeFaceDetector.h"
+#include "FaceDetect/AnnoImage.hpp"
 
 using namespace std;
 using namespace cv;
@@ -63,7 +64,8 @@ int main(int argc, const char * argv[])
     float iouThreshold = 0.3;
     BlazeFaceDetector detector(scoreThreshold, iouThreshold);
 
-    isOK = detector.DetectFaces(srcImage);
+    vector<FaceInfo_Int> outFaceInfoSet;
+    isOK = detector.DetectFaces(srcImage, outFaceInfoSet);
     if(!isOK)
     {
         cout << "Failed to invoke BlazeFaceDetector::DetectFaces()."  << endl;
@@ -72,5 +74,10 @@ int main(int argc, const char * argv[])
     else
         cout << "Succeeded to invoke BlazeFaceDetector::DetectFaces()." << endl;
     
+    FaceInfo_Int faceInfo_GC = outFaceInfoSet[0]; // global coordinate
+
+    AnnoFaceBoxKPs(srcImage, faceInfo_GC);
+    imwrite(annoImgFile, srcImage);
+
     return 0;
 }

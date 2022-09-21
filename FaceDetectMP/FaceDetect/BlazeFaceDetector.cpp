@@ -104,8 +104,13 @@ void BlazeFaceDetector::genFrontModelAnchors()
     genAnchors(options, mAnchors);
 }
 
-bool BlazeFaceDetector::DetectFaces(const Mat& srcImage)
+bool BlazeFaceDetector::DetectFaces(const Mat& srcImage,
+                                    vector<FaceInfo_Int>& outFaceInfoSet)
 {
+    mImgHeight = srcImage.rows;
+    mImgWidth = srcImage.cols;
+    mImgChannels = srcImage.channels();
+    
     int inTensorIndex = mInterpreter->inputs()[0];
     
     Mat resized_image;
@@ -128,17 +133,27 @@ bool BlazeFaceDetector::DetectFaces(const Mat& srcImage)
     vector<FaceIndexScore> indexScoreCds;
     // Filter scores based on the detection scores
     filterDetections(indexScoreCds);
+    /*
     cout << "-----------------------------------------------" << endl;
     for(int i=0; i<indexScoreCds.size(); i++ )
     {
         cout << indexScoreCds[i].index << ", " << indexScoreCds[i].score << endl;
     }
     cout << "-----------------------------------------------" << endl;
-
-    vector<FaceInfo> faceInfoCds, outFaceInfoSet;
-    extractDetections(indexScoreCds, faceInfoCds);
-    NMS(faceInfoCds, outFaceInfoSet);
+     */
     
+    vector<FaceInfo> faceInfoCds;
+    extractDetections(indexScoreCds, faceInfoCds);
+    
+    vector<FaceInfo> outFaceInfoSet_LC;  // local coordinate
+    NMS(faceInfoCds, outFaceInfoSet_LC);
+    
+    for(FaceInfo oldInfo: outFaceInfoSet_LC)
+    {
+        FaceInfo_Int newInfo;
+        convFaceInfo2SrcImgCoordinate(oldInfo, newInfo);
+        outFaceInfoSet.push_back(newInfo);
+    }
     return true;
 }
 
@@ -271,3 +286,37 @@ void BlazeFaceDetector::NMS(vector<FaceInfo>& inFaceSet,
     }
 }
 
+int BlazeFaceDetector::convX2SrcImgCoordinate(float x0)
+{
+    int x1 = (int)(x0 * mImgWidth);
+    return x1;
+}
+
+int BlazeFaceDetector::convY2SrcImgCoordinate(float y0)
+{
+    int y1 = (int)(y0 * mImgHeight);
+    return y1;
+}
+
+// 将计算结果转换到原始输入图像的坐标空间中
+void BlazeFaceDetector::convFaceInfo2SrcImgCoordinate(
+        const FaceInfo& oldInfo, FaceInfo_Int& newInfo)
+{
+    int x1 = convX2SrcImgCoordinate(oldInfo.x1);
+    int y1 = convY2SrcImgCoordinate(oldInfo.y1);
+    
+    int x2 = convX2SrcImgCoordinate(oldInfo.x2);
+    int y2 = convY2SrcImgCoordinate(oldInfo.y2);
+    
+    newInfo.setBox(x1, y1, x2, y2);
+    newInfo.score = oldInfo.score;
+    
+    for(int i = 0; i < NUM_KP_IN_FACE; i++)
+    {
+        Point2f p = oldInfo.keyPts[i];
+        int x = convX2SrcImgCoordinate(p.x);
+        int y = convY2SrcImgCoordinate(p.y);
+        newInfo.keyPts[i] = Point2i(x, y);
+    }
+    
+}
