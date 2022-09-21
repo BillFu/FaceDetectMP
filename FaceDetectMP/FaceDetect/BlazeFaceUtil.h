@@ -69,12 +69,15 @@ public:
 class Anchor
 {
 public:
-    int x_center;
-    int y_center;
-    int w, h;
+    // x_center, y_center always in [0.0 1.0]
+    float x_center;
+    float y_center;
+    
+    // if options.mFixed_anchor_size == true, then w, h always equal with 1.0
+    float w, h;
     
 public:
-    Anchor(int x_center0, int y_center0, int w0, int h0);
+    Anchor(float x_center0, float y_center0, float w0, float h0);
 };
 
 std::ostream& operator<<(ostream &strm, const Anchor &a);

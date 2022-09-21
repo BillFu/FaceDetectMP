@@ -100,8 +100,13 @@ void BlazeFaceDetector::genFrontModelAnchors()
                                 feature_map_width, feature_map_height,
                                 strides, aspect_ratios,
                                 0.5, 0.5,
-                                false, 1.0, true);
+                                false, 1.0, false); //true);
     genAnchors(options, mAnchors);
+    
+    for(Anchor anchor : mAnchors)
+    {
+        cout << anchor << endl;
+    }
 }
 
 bool BlazeFaceDetector::DetectFaces(const Mat& srcImage,
@@ -133,22 +138,14 @@ bool BlazeFaceDetector::DetectFaces(const Mat& srcImage,
     vector<FaceIndexScore> indexScoreCds;
     // Filter scores based on the detection scores
     filterDetections(indexScoreCds);
-    /*
-    cout << "-----------------------------------------------" << endl;
-    for(int i=0; i<indexScoreCds.size(); i++ )
-    {
-        cout << indexScoreCds[i].index << ", " << indexScoreCds[i].score << endl;
-    }
-    cout << "-----------------------------------------------" << endl;
-     */
     
-    vector<FaceInfo> faceInfoCds;
+    vector<FaceInfo_Float> faceInfoCds;
     extractDetections(indexScoreCds, faceInfoCds);
     
-    vector<FaceInfo> outFaceInfoSet_LC;  // local coordinate
+    vector<FaceInfo_Float> outFaceInfoSet_LC;  // local coordinate
     NMS(faceInfoCds, outFaceInfoSet_LC);
     
-    for(FaceInfo oldInfo: outFaceInfoSet_LC)
+    for(FaceInfo_Float oldInfo: outFaceInfoSet_LC)
     {
         FaceInfo_Int newInfo;
         convFaceInfo2SrcImgCoordinate(oldInfo, newInfo);
@@ -179,7 +176,7 @@ void BlazeFaceDetector::filterDetections(vector<FaceIndexScore>& indexScoreCds)
 
 void BlazeFaceDetector::extractDetections(
         const vector<FaceIndexScore>& indexScoreCds,
-        vector<FaceInfo>& faceInfoCds)
+        vector<FaceInfo_Float>& faceInfoCds)
 {
     // bounding box and six key points
     float* out0Ptr = mInterpreter->typed_output_tensor<float>(0);
@@ -187,7 +184,7 @@ void BlazeFaceDetector::extractDetections(
 
     for(FaceIndexScore indexScore: indexScoreCds)
     {
-        FaceInfo faceInfo;
+        FaceInfo_Float faceInfo;
         faceInfo.score = indexScore.score;
         
         const Anchor& anchor = mAnchors[indexScore.index];
@@ -233,12 +230,12 @@ void BlazeFaceDetector::extractDetections(
 
 // https://github.com/cuongvng/Face-Detection-TFLite-JNI-Android/blob/master/app/src/main/cpp/face-detection.cpp
 
-void BlazeFaceDetector::NMS(vector<FaceInfo>& inFaceSet,
-                            vector<FaceInfo>& outFaceSet)
+void BlazeFaceDetector::NMS(vector<FaceInfo_Float>& inFaceSet,
+                            vector<FaceInfo_Float>& outFaceSet)
 {
     // sort the elements in inFaceSet by score in Descending order
     std::sort(inFaceSet.begin(), inFaceSet.end(),
-        [](const FaceInfo& a, const FaceInfo& b){return a.score > b.score;});
+        [](const FaceInfo_Float& a, const FaceInfo_Float& b){return a.score > b.score;});
 
     int box_num = (int)(inFaceSet.size());
 
@@ -300,7 +297,7 @@ int BlazeFaceDetector::convY2SrcImgCoordinate(float y0)
 
 // 将计算结果转换到原始输入图像的坐标空间中
 void BlazeFaceDetector::convFaceInfo2SrcImgCoordinate(
-        const FaceInfo& oldInfo, FaceInfo_Int& newInfo)
+        const FaceInfo_Float& oldInfo, FaceInfo_Int& newInfo)
 {
     int x1 = convX2SrcImgCoordinate(oldInfo.x1);
     int y1 = convY2SrcImgCoordinate(oldInfo.y1);

@@ -74,9 +74,13 @@ int main(int argc, const char * argv[])
     else
         cout << "Succeeded to invoke BlazeFaceDetector::DetectFaces()." << endl;
     
-    FaceInfo_Int faceInfo_GC = outFaceInfoSet[0]; // global coordinate
+    //FaceInfo_Int faceInfo_GC = outFaceInfoSet[0]; // global coordinate
 
-    AnnoFaceBoxKPs(srcImage, faceInfo_GC);
+    for(FaceInfo_Int faceInfo_GC: outFaceInfoSet)
+    {
+        AnnoFaceBoxKPs(srcImage, faceInfo_GC);
+    }
+    
     imwrite(annoImgFile, srcImage);
 
     return 0;

@@ -29,23 +29,14 @@ void AnnoFaceBoxKPs(Mat& annoImage, FaceInfo_Int& faceInfo)
                   colorBox, thickness, LINE_8);
     }
     
-    /*
-    // 对应Dlib上点的序号为18, 22, 23, 27, 37, 40, 43, 46, 32, 36, 49, 55, 58, 9
-    int face_2d_pts_indices[] = {46, 55, 285, 276, 33, 173,
-        398, 263, 48, 278, 61, 291, 17, 199};  // indics in face lms in mediapipe.
-        
-    cv::Scalar yellow(0, 255, 255); // (B, G, R)
-
-    for(int i=0; i<14; i++)
+    for(int i=0; i<NUM_KP_IN_FACE; i++)
     {
-        int lm_index = face_2d_pts_indices[i];
-        int x = faceInfo.lm_2d[lm_index][0];
-        int y = faceInfo.lm_2d[lm_index][1];
+        int x = faceInfo.keyPts[i].x;
+        int y = faceInfo.keyPts[i].y;
         
         cv::Point center(x, y);
-        cv::circle(annoImage, center, 5, yellow, cv::FILLED);
+        cv::circle(annoImage, center, 5, colorBox, cv::FILLED);
     }
-    */
 }
 
 //-----------------------------------------------------------------------------------------

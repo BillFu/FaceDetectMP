@@ -92,14 +92,14 @@ private:
     void filterDetections(vector<FaceIndexScore>& indexScoreCds); // Cd stands for candidate
     
     void extractDetections(const vector<FaceIndexScore>& indexScoreCds,
-                           vector<FaceInfo>& faceInfoCds);
+                           vector<FaceInfo_Float>& faceInfoCds);
     
     ////NMS is the abbreviation for NonMaxSupression
-    void NMS(vector<FaceInfo>& inFaceSet,
-            vector<FaceInfo>& outFaceSet);
+    void NMS(vector<FaceInfo_Float>& inFaceSet,
+            vector<FaceInfo_Float>& outFaceSet);
     
     // 将计算结果转换到原始输入图像的坐标空间中
-    void convFaceInfo2SrcImgCoordinate(const FaceInfo& oldInfo, FaceInfo_Int& newInfo);
+    void convFaceInfo2SrcImgCoordinate(const FaceInfo_Float& oldInfo, FaceInfo_Int& newInfo);
     
     int convX2SrcImgCoordinate(float x);
     int convY2SrcImgCoordinate(float y);

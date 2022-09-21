@@ -8,7 +8,7 @@
 
 #include "BlazeFaceUtil.h"
 
-Anchor::Anchor(int x_center0, int y_center0, int w0, int h0)
+Anchor::Anchor(float x_center0, float y_center0, float w0, float h0)
 {
     x_center = x_center0;
     y_center = y_center0;
@@ -99,8 +99,8 @@ void genAnchors(const SsdAnchorsCalcOpts& options, vector<Anchor>& anchors)
     int layer_id = 0;
     while (layer_id < options.mStrides_size)
     {
-        vector<int> anchor_height;
-        vector<int> anchor_width;
+        vector<float> anchor_height;
+        vector<float> anchor_width;
         vector<float> aspect_ratios;
         vector<float> scales;
         
@@ -172,11 +172,11 @@ void genAnchors(const SsdAnchorsCalcOpts& options, vector<Anchor>& anchors)
                 for(int anchor_id=0; anchor_id < anchor_height.size(); anchor_id++)
                 {
                     //# TODO: Support specifying anchor_offset_x, anchor_offset_y.
-                    int x_center = (x + options.mAnchor_offset_x) * 1.0 / feature_map_width;
-                    int y_center = (y + options.mAnchor_offset_y) * 1.0 / feature_map_height;
-                    int w = 0;
-                    int h = 0;
-                    if (options.mFixed_anchor_size)
+                    float x_center = (x + options.mAnchor_offset_x) * 1.0 / feature_map_width;
+                    float y_center = (y + options.mAnchor_offset_y) * 1.0 / feature_map_height;
+                    float w = 0;
+                    float h = 0;
+                    if (options.mFixed_anchor_size)  // !!!
                     {
                         w = 1.0;
                         h = 1.0;
