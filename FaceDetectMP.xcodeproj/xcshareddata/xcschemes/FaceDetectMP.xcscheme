@@ -36,7 +36,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "YES"
-      customWorkingDirectory = "/Users/meicet/FaceDetectMP"
+      customWorkingDirectory = "/Users/fuliye/FaceDetectMP"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
@@ -54,7 +54,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "config.json"
+            argument = "config_back.json"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

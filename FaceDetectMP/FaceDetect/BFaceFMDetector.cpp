@@ -9,10 +9,10 @@
 #include "BlazeFaceUtil.h"
 #include "Utils.hpp"
 
-bool BFaceBMDetector::isBackModelBufFilled = false;
+bool BFaceBMDetector::isModelBufFilled = false;
 char BFaceBMDetector::backModelBuffer[FACE_DETECT_BACK_MODEL_SIZE];
 
-bool BFaceBMDetector::loadBackModelFile(const string& modelFileName)
+bool BFaceBMDetector::loadModelFile(const string& modelFileName)
 {
     ifstream modelFile(modelFileName.c_str(), ios::in | ios::binary);
     
@@ -25,7 +25,7 @@ bool BFaceBMDetector::loadBackModelFile(const string& modelFileName)
     else
     {
         cout << "Model file has been Successfully loaded!" << endl;
-        isBackModelBufFilled = true;
+        isModelBufFilled = true;
         return true;
     }
 }
@@ -43,7 +43,7 @@ BFaceBMDetector::BFaceBMDetector(float scoreThreshold, float iouThreshold)
     initBackModel();
 
     // # Generate anchors for model
-    genFrontModelAnchors();
+    genModelAnchors();
 }
 
 BFaceBMDetector::~BFaceBMDetector()
@@ -52,19 +52,19 @@ BFaceBMDetector::~BFaceBMDetector()
 
 bool BFaceBMDetector::initBackModel()
 {
-    if(!isBackModelBufFilled)
+    if(!isModelBufFilled)
     {
         cout << "To invoke BFaceBMDetector::loadBackModelFile() first!" << endl;
         return false;
     }
         
-    mBackModel = FlatBufferModel::BuildFromBuffer(backModelBuffer, FACE_DETECT_BACK_MODEL_SIZE);
-    if(mBackModel == nullptr)
+    mModel = FlatBufferModel::BuildFromBuffer(backModelBuffer, FACE_DETECT_BACK_MODEL_SIZE);
+    if(mModel == nullptr)
         return false;
 
         // Build the interpreter with the InterpreterBuilder.
     ops::builtin::BuiltinOpResolver resolver;
-    InterpreterBuilder builder(*mBackModel, resolver);
+    InterpreterBuilder builder(*mModel, resolver);
     builder(&mInterpreter);
     if(mInterpreter == nullptr)
         return false;
@@ -87,19 +87,21 @@ void BFaceBMDetector::getModelInputDetails()
     mNetChannels = mInterpreter->tensor(inTensorIndex)->dims->data[3];
 }
 
-void BFaceBMDetector::genFrontModelAnchors()
+void BFaceBMDetector::genModelAnchors()
 {
     vector<int> feature_map_width;
     vector<int> feature_map_height;
-    vector<int> strides = {8, 16, 16, 16};
+    vector<int> strides = {16, 32, 32, 32};
     vector<float> aspect_ratios = {1.0};
-    
+    //vector<float> aspect_ratios = {0.75};
+
     // Options to generate anchors for SSD object detection models.
-     SsdAnchorsCalcOpts options(128, 128, 0.1484375, 0.75, 4,
+     SsdAnchorsCalcOpts options(256, 256, 0.15625, 0.75, 4,
                                 feature_map_width, feature_map_height,
                                 strides, aspect_ratios,
-                                0.5, 0.5,
-                                false, 1.0, false); //true);
+                                0.5, 0.5, //anchor_offset_x, anchor_offset_y
+                                false, 1.0, true);
+    
     genAnchors(options, mAnchors);
     
     for(Anchor anchor : mAnchors)

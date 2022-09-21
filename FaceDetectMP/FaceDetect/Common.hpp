@@ -17,6 +17,18 @@ using namespace cv;
 
 #define  NUM_KP_IN_FACE    6    // the number of key points in one face
 
+struct FaceIndexScore
+{
+    int index;  // take a value in [0 896]
+    float score;
+    
+    FaceIndexScore(int index0, float score0)
+    {
+        index = index0;
+        score = score0;
+    }
+};
+
 struct FaceInfo_Float
 {
     // x1, y1, x2, y2与后面的box存在信息冗余，但为NMS算法的便利，故意这么做。

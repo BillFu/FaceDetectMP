@@ -13,7 +13,7 @@
 #include "nlohmann/json.hpp"
 
 #include <opencv2/opencv.hpp>
-#include "FaceDetect/BlazeFaceDetector.h"
+#include "FaceDetect/BFaceBMDetector.h"
 #include "FaceDetect/AnnoImage.hpp"
 
 using namespace std;
@@ -51,7 +51,7 @@ int main(int argc, const char * argv[])
     else
         cout << "Succeeded to load image: " << srcImgFile << endl;
     
-    bool isOK = BlazeFaceDetector::loadFrontModelFile(faceDetectModelFile);
+    bool isOK = BFaceBMDetector::loadModelFile(faceDetectModelFile);
     if(!isOK)
     {
         cout << "Failed to load model file: " << faceDetectModelFile << endl;
@@ -62,7 +62,7 @@ int main(int argc, const char * argv[])
 
     float scoreThreshold = 0.75; //;
     float iouThreshold = 0.3;
-    BlazeFaceDetector detector(scoreThreshold, iouThreshold);
+    BFaceBMDetector detector(scoreThreshold, iouThreshold);
 
     vector<FaceInfo_Int> outFaceInfoSet;
     isOK = detector.DetectFaces(srcImage, outFaceInfoSet);

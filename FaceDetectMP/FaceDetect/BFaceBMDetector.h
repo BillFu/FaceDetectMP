@@ -33,22 +33,12 @@ using namespace cv;
 
 #define  FACE_DETECT_BACK_MODEL_SIZE  315332
 
-struct FaceIndexScore
-{
-    int index;  // take a value in [0 896]
-    float score;
-    
-    FaceIndexScore(int index0, float score0)
-    {
-        index = index0;
-        score = score0;
-    }
-};
+
 
 class BFaceBMDetector  // the full name should be BLAZE_FACE_BACK_MODEL_DETECTOR
 {
 private:
-    unique_ptr<FlatBufferModel> mBackModel;
+    unique_ptr<FlatBufferModel> mModel;
     unique_ptr<Interpreter> mInterpreter;
     
     vector<Anchor> mAnchors;
@@ -67,11 +57,11 @@ private:
     int mImgChannels;
     
 public:
-    static bool isBackModelBufFilled;
+    static bool isModelBufFilled;
     static char backModelBuffer[FACE_DETECT_BACK_MODEL_SIZE];
     
     // 这个函数在程序初始化时要调用一次，并确保返回true之后，才能往下进行
-    static bool loadBackModelFile(const string& modelFileName);
+    static bool loadModelFile(const string& modelFileName);
     
     BFaceBMDetector(float scoreThreshold = 0.7, float iouThreshold = 0.3);
     ~BFaceBMDetector();
@@ -85,7 +75,7 @@ public:
 private:
     void getModelInputDetails();
     
-    void genFrontModelAnchors();
+    void genModelAnchors();
         
     void filterDetections(vector<FaceIndexScore>& indexScoreCds); // Cd stands for candidate
     

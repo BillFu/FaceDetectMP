@@ -35,18 +35,6 @@ using namespace cv;
 #define  FACE_DETECT_FRONT_MODEL_SIZE  229032
 
 
-struct FaceIndexScore
-{
-    int index;  // take a value in [0 896]
-    float score;
-    
-    FaceIndexScore(int index0, float score0)
-    {
-        index = index0;
-        score = score0;
-    }
-};
-
 class BlazeFaceDetector
 {
 private:
