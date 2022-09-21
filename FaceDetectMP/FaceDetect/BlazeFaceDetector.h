@@ -100,7 +100,7 @@ private:
     void extractDetections(const vector<FaceIndexScore>& indexScoreCds,
                            vector<FaceInfo>& faceInfoCds);
     
-    void filterWithNMS();  //NMS is the abbreviation for NonMaxSupression
+    void filterWithNMS(const vector<FaceInfo>& faceInfoCds);  //NMS is the abbreviation for NonMaxSupression
 };
 
 #endif // BLAZE_FACE_DETECTOR_H

@@ -46,6 +46,10 @@ BlazeFaceDetector::BlazeFaceDetector(float scoreThreshold, float iouThreshold)
     genFrontModelAnchors();
 }
 
+BlazeFaceDetector::~BlazeFaceDetector()
+{
+}
+
 bool BlazeFaceDetector::initFrontModel()
 {
     if(!isFrontModelBufFilled)
@@ -133,14 +137,8 @@ bool BlazeFaceDetector::DetectFaces(const Mat& srcImage)
 
     vector<FaceInfo> faceInfoCds;
     extractDetections(indexScoreCds, faceInfoCds);
-
-     /*
-
-# Filter results with non-maximum suppression
-detectionResults = self.filterWithNonMaxSupression(boxes, keypoints, scores)
-
-return detectionResults
-     */
+    filterWithNMS(faceInfoCds);
+    
     return true;
 }
 
@@ -175,6 +173,8 @@ void BlazeFaceDetector::extractDetections(
     for(FaceIndexScore indexScore: indexScoreCds)
     {
         FaceInfo faceInfo;
+        faceInfo.score = indexScore.score;
+        
         const Anchor& anchor = mAnchors[indexScore.index];
 
         float* pBoxKeyPts = out0Ptr + indexScore.index * 16;
@@ -216,13 +216,7 @@ void BlazeFaceDetector::extractDetections(
     }
 }
 
-BlazeFaceDetector::~BlazeFaceDetector()
+void BlazeFaceDetector::filterWithNMS(const vector<FaceInfo>& faceInfoCds)
 {
-    /*
-    if(mModelBuffer != nullptr)
-    {
-        free(mModelBuffer);
-        mModelBuffer = nullptr;
-    }
-    */
+    
 }
