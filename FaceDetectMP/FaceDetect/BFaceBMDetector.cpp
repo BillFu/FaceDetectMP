@@ -1,3 +1,16 @@
+//
+//
+/************************************************************************************************************
+本模块的功能是，利用tensorflow lite C++ API来驱动MediaPipe中内含的Blaze Face Detection Model.
+本模块由python代码改写而来，原始代码出处如下：
+https://github.com/ibaiGorordo/BlazeFace-TFLite-Inference/blob/main/BlazeFaceDetection/blazeFaceDetector.py
+
+本模块采用Back相机模型，效果可能比Front相机模型要好。
+ 
+Author: Fu Xiaoqiang
+Date:   2022/9/21
+*************************************************************************************************************/
+
 
 #include <iostream>
 #include <fstream>

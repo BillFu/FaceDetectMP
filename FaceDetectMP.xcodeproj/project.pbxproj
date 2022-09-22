@@ -10,7 +10,7 @@
 		261DF7A528DA070A006ABD65 /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 261DF7A328DA070A006ABD65 /* Utils.cpp */; };
 		CB31CA8F28DAE60F00B5564E /* AnnoImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB31CA8E28DAE60F00B5564E /* AnnoImage.cpp */; };
 		CB3915E228DBF15600D9CE5F /* libtensorflowlite.so in Frameworks */ = {isa = PBXBuildFile; fileRef = CBA886F528D96233004A42BA /* libtensorflowlite.so */; };
-		CB80800928DB123600D29EA2 /* BFaceFMDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB80800828DB123600D29EA2 /* BFaceFMDetector.cpp */; };
+		CB7E333428DC0C120068F0C3 /* BFaceBMDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB7E333328DC0C120068F0C3 /* BFaceBMDetector.cpp */; };
 		CBA886E928D93D76004A42BA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CBA886E828D93D76004A42BA /* main.cpp */; };
 		CBA886F328D94267004A42BA /* BlazeFaceDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CBA886F228D94267004A42BA /* BlazeFaceDetector.cpp */; };
 		CBA886F928D96966004A42BA /* BlazeFaceUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CBA886F828D96966004A42BA /* BlazeFaceUtil.cpp */; };
@@ -35,8 +35,8 @@
 		CB31CA8D28DAE60F00B5564E /* AnnoImage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AnnoImage.hpp; sourceTree = "<group>"; };
 		CB31CA8E28DAE60F00B5564E /* AnnoImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnnoImage.cpp; sourceTree = "<group>"; };
 		CB31CA9028DAE79800B5564E /* Common.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Common.hpp; sourceTree = "<group>"; };
+		CB7E333328DC0C120068F0C3 /* BFaceBMDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BFaceBMDetector.cpp; sourceTree = "<group>"; };
 		CB80800728DB123600D29EA2 /* BFaceBMDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFaceBMDetector.h; sourceTree = "<group>"; };
-		CB80800828DB123600D29EA2 /* BFaceFMDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BFaceFMDetector.cpp; sourceTree = "<group>"; };
 		CBA886E528D93D76004A42BA /* FaceDetectMP */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FaceDetectMP; sourceTree = BUILT_PRODUCTS_DIR; };
 		CBA886E828D93D76004A42BA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		CBA886F128D94267004A42BA /* BlazeFaceDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlazeFaceDetector.h; sourceTree = "<group>"; };
@@ -87,8 +87,8 @@
 		CBA886F028D94168004A42BA /* FaceDetect */ = {
 			isa = PBXGroup;
 			children = (
+				CB7E333328DC0C120068F0C3 /* BFaceBMDetector.cpp */,
 				CB80800728DB123600D29EA2 /* BFaceBMDetector.h */,
-				CB80800828DB123600D29EA2 /* BFaceFMDetector.cpp */,
 				CB31CA9028DAE79800B5564E /* Common.hpp */,
 				CB31CA8E28DAE60F00B5564E /* AnnoImage.cpp */,
 				CB31CA8D28DAE60F00B5564E /* AnnoImage.hpp */,
@@ -189,7 +189,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CB80800928DB123600D29EA2 /* BFaceFMDetector.cpp in Sources */,
+				CB7E333428DC0C120068F0C3 /* BFaceBMDetector.cpp in Sources */,
 				CB31CA8F28DAE60F00B5564E /* AnnoImage.cpp in Sources */,
 				CBA886E928D93D76004A42BA /* main.cpp in Sources */,
 				CBA886F928D96966004A42BA /* BlazeFaceUtil.cpp in Sources */,
