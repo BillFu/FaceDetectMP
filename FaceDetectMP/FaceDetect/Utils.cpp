@@ -106,3 +106,66 @@ void FeedInputWithQuantizedImage(uint8_t* imgDataPtr, float* netInputBuffer, int
 }
 
 //-------------------------------------------------------------------------------------------
+
+/**********************************************************************************************
+ 采用Padding的方式，将原始图像扩充为一个正方形。
+ 正方形的边长等于Max(srcWidth, srcHeight)，原始像素矩阵在正方形中居中。
+ 填充的像素取黑色。
+***********************************************************************************************/
+void MakeSquareImage(const Mat& srcImg, Mat& squareImg)
+{
+    int srcW = srcImg.cols;
+    int srcH = srcImg.rows;
+    
+    if(srcW >= srcH) // this case will not happened in our task
+        squareImg = srcImg.clone();
+    else // srcW < srcH
+    {
+        Scalar blackColor(0, 0, 0);
+        
+        int padSideW = (srcH - srcW)/ 2;
+        int top = 0;
+        int bottom = 0;
+        copyMakeBorder( srcImg, squareImg, top, bottom, padSideW, padSideW,
+                       BORDER_CONSTANT, blackColor);
+    }
+}
+
+//-------------------------------------------------------------------------------------------
+
+/**********************************************************************************************
+采用Padding的方式，将原始图像扩充为一个正方形。
+上下左右都扩展。
+先扩充上下，newH = srcH * alpha, alpha取[0.2 0.4]
+依据newH，再扩展左右，使之成为一个正方形
+正方形的边长等于newH，原始像素矩阵在正方形中居中。
+填充的像素取黑色。
+***********************************************************************************************/
+void MakeSquareImageV2(const Mat& srcImg, float deltaHRatio, Mat& squareImg)
+{
+    int srcW = srcImg.cols;
+    int srcH = srcImg.rows;
+    
+    assert(srcW % 2 == 0); // must be a even number
+    assert(srcH % 2 == 0); // must be a even number
+
+    if(srcW >= srcH) // this case will not happened in our task
+        squareImg = srcImg.clone();
+    else // srcW < srcH
+    {
+        Scalar blackColor(0, 0, 0);
+        
+        int newH = (int)(srcH*(1 + deltaHRatio));
+        if(newH % 2 == 1) // is odd number, should be converted to a even number
+            newH += 1;
+        
+        int padVertW = (newH - srcH) / 2;  // padding at top and bottom
+        int padSideW = (newH - srcW)/ 2;
+        
+        copyMakeBorder( srcImg, squareImg,
+                        padVertW, padVertW, //
+                        padSideW, padSideW,
+                       BORDER_CONSTANT, blackColor);
+    }
+}
+//-------------------------------------------------------------------------------------------

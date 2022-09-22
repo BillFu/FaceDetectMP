@@ -15,6 +15,7 @@
 #include <opencv2/opencv.hpp>
 #include "FaceDetect/BFaceBMDetector.h"
 #include "FaceDetect/AnnoImage.hpp"
+#include "FaceDetect/Utils.hpp"
 
 using namespace std;
 using namespace cv;
@@ -64,8 +65,11 @@ int main(int argc, const char * argv[])
     float iouThreshold = 0.3;
     BFaceBMDetector detector(scoreThreshold, iouThreshold);
 
+    Mat squareImg;
+    MakeSquareImageV2(srcImage, 0.3, squareImg);
+
     vector<FaceInfo_Int> outFaceInfoSet;
-    isOK = detector.DetectFaces(srcImage, outFaceInfoSet);
+    isOK = detector.DetectFaces(squareImg, outFaceInfoSet);
     if(!isOK)
     {
         cout << "Failed to invoke BlazeFaceDetector::DetectFaces()."  << endl;
@@ -78,10 +82,10 @@ int main(int argc, const char * argv[])
 
     for(FaceInfo_Int faceInfo_GC: outFaceInfoSet)
     {
-        AnnoFaceBoxKPs(srcImage, faceInfo_GC);
+        AnnoFaceBoxKPs(squareImg, faceInfo_GC);
     }
     
-    imwrite(annoImgFile, srcImage);
+    imwrite(annoImgFile, squareImg);
 
     return 0;
 }
