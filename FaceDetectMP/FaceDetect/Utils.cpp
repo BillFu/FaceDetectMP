@@ -146,8 +146,8 @@ void MakeSquareImageV2(const Mat& srcImg, float deltaHRatio, Mat& squareImg)
     int srcW = srcImg.cols;
     int srcH = srcImg.rows;
     
-    assert(srcW % 2 == 0); // must be a even number
-    assert(srcH % 2 == 0); // must be a even number
+    //assert(srcW % 2 == 0); // must be a even number
+    //assert(srcH % 2 == 0); // must be a even number
 
     if(srcW >= srcH) // this case will not happened in our task
         squareImg = srcImg.clone();
@@ -156,15 +156,17 @@ void MakeSquareImageV2(const Mat& srcImg, float deltaHRatio, Mat& squareImg)
         Scalar blackColor(0, 0, 0);
         
         int newH = (int)(srcH*(1 + deltaHRatio));
-        if(newH % 2 == 1) // is odd number, should be converted to a even number
-            newH += 1;
+        if(newH % 4 != 0) // should be divided by 4 completely
+            newH += 4 - (newH % 4);
         
-        int padVertW = (newH - srcH) / 2;  // padding at top and bottom
-        int padSideW = (newH - srcW)/ 2;
+        int padVertTop = (newH - srcH) / 2;  // padding at top and bottom
+        int padSideLeft = (newH - srcW)/ 2;
+        int padVertBot = newH - padVertTop - srcH;
+        int padSideRight = newH - padSideLeft - srcW;
         
         copyMakeBorder( srcImg, squareImg,
-                        padVertW, padVertW, //
-                        padSideW, padSideW,
+                       padVertTop, padVertBot, //
+                       padSideLeft, padSideRight,
                        BORDER_CONSTANT, blackColor);
     }
 }

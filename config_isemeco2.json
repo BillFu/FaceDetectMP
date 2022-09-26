@@ -1,0 +1,5 @@
+{
+	"FaceDetectModelFile": 			"model/face_detection_back.tflite",
+	"SourceImage":					"images/ISEMECO/cross_2.jpg",
+	"AnnoImage": 					"result/ISEMECO/squareV2_2.png"
+}

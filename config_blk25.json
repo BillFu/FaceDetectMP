@@ -1,0 +1,5 @@
+{
+	"FaceDetectModelFile": 			"model/face_detection_back.tflite",
+	"SourceImage":					"images/Black/cross_25.jpg",
+	"AnnoImage": 					"result/Black/squareV2_25.png"
+}
